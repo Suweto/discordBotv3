@@ -1,0 +1,23 @@
+{
+  "name": "bot-v3.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "axios": "^1.4.0",
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.3.1",
+    "mercadopago": "^1.5.17",
+    "mongoose": "^7.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
