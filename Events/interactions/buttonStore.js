@@ -336,12 +336,7 @@ module.exports =
                             .setEmoji("986039365836865566")
                             .setLabel("Copia e cola")
                             .setStyle(ButtonStyle.Primary))
-                                .addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('cancelarpix')
-                                    .setEmoji("986039358354251887")
-                                    .setLabel("Cancelar pix")
-                                    .setStyle(ButtonStyle.Danger),)         
+                                         
                     
                     const embed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}| Sistema de pagamento`)
@@ -467,6 +462,41 @@ module.exports =
                                 
                             })
                 })
+                    break;
+                case 'feedback':
+                    const feedbackModal = new ModalBuilder()
+                        .setCustomId("store,feedback")
+                        .setTitle(`FeedBack ${interaction.guild.name}`);
+                    const feedbackP1 = new TextInputBuilder()
+                        .setCustomId("feedbackp1")
+                        .setLabel("De 1 à 5, Quanto você avalia o atendimento?")
+                        .setPlaceholder("5")
+                        .setStyle(TextInputStyle.Short)
+                        .setMinLength(1)
+                        .setMaxLength(1)
+                        .setRequired(true);
+                    const feedbackP2 = new TextInputBuilder()
+                        .setCustomId("feedbackp2")
+                        .setLabel("Avalie a velocidade de entrega de 1 à 5")
+                        .setPlaceholder("5")
+                        .setStyle(TextInputStyle.Short)
+                        .setMinLength(1)
+                        .setMaxLength(1)
+                        .setRequired(true);
+                    const feedbackP3 = new TextInputBuilder()
+                        .setCustomId("feedbackp3")
+                        .setLabel("O que você achou sobre a compra?")
+                        .setPlaceholder("Perfeita, super confiável")
+                        .setStyle(TextInputStyle.Short)
+                        .setMinLength(1)
+                        .setMaxLength(100)
+                        .setRequired(false);
+                    feedbackModal.addComponents(
+                        new ActionRowBuilder().addComponents(feedbackP1),
+                        new ActionRowBuilder().addComponents(feedbackP2),
+                        new ActionRowBuilder().addComponents(feedbackP3)
+                    )
+                    interaction.showModal(feedbackModal);
                     break;
             default:
                 break;

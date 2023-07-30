@@ -8,13 +8,13 @@ const {loadCommands} = require('./Handlers/commandHandler.js')
 
 const dotenv = require('dotenv');
 dotenv.config();
-const {Token} = process.env;
+const {TOKEN} = process.env;
 
 const client = new Client({intents:[Guilds,GuildMembers,GuildMessages],Partials:[User,Message,GuildMember,ThreadMember]});
 
 client.commands = new Collection();
 
-client.login(Token).then(()=>{
+client.login(TOKEN).then(()=>{
     loadEvents(client);
     loadCommands(client);
 });

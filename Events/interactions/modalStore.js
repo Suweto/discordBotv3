@@ -108,6 +108,70 @@ module.exports = {
                     }
                     
                     break;
+                case 'feedback':
+                    let feedbackr1 = interaction.fields.getTextInputValue("feedbackp1");
+                    let feedbackr2 = interaction.fields.getTextInputValue("feedbackp2");
+                    let feedbackr3 = interaction.fields.getTextInputValue("feedbackp3") || "Nada a relatar";
+
+                    const newr1 = numberVerify(feedbackr1);
+                    const newr2 = numberVerify(feedbackr2);
+
+                    if(typeof(newr1) === typeof(r1) || typeof(newr2) === typeof(r2) || newr1 >= 6 || newr2 >=6){
+                        interaction.reply({content:"Você usou uma caractere errada no FeedBack Form\nTente novamente", ephemeral:true});
+                        return;
+                    }
+                    const embed = new EmbedBuilder()
+                        .setAuthor({name:`${client.user.username}`})
+                        .setThumbnail(`${interaction.user.avatarURL()}`)
+                        .setImage(`https://cdn.discordapp.com/attachments/1070868034643828877/1131033932662587412/time_esticado.png`)
+                        .setTitle(`FeedBack de compra`)
+                        .setDescription(`<@${interaction.user.id}>`)
+                        .setColor("Random")
+                        .setTimestamp(new Date())
+                        .addFields(
+                            [
+                                {
+                                    name:`Avaliação do atendimento`,
+                                    value:`${toStar(newr1)}`,
+                                    inline:true
+                                },
+                                {
+                                    name:`Velocidade para receber o Produto`,
+                                    value:`${toStar(newr2)}`,
+                                    inline:true
+                                },
+                                {
+                                    name:`O que achou da compra`,
+                                    value:`${feedbackr3}`,
+                                    inline:true
+                                }
+                            ]
+                        )
+                        const channel = client.channels.cache.find(channel=> channel.id === guildDb.feedbackChannel);
+                        await channel.send({embeds:[embed]});
+                        await interaction.reply(".");
+                        const channelCartID = userDb.cart.channel;
+                        const channelCart = await client.channels.cache.find(channel=> channel.id === channelCartID);
+                        await channelCart.delete();
+                        await model.guild.updateOne(
+                            {guildId:interaction.guild.id,"users.userId":interaction.user.id},
+                            {$set:  {"users.$.cart":{
+                                            isBuying: false,
+                                            isFinal:false,
+                                            channel: null,
+                                            msg: null,
+                                            cupom: {},
+                                            total: null,
+                                            total2: null,
+                                            products:
+                                            [
+                                            ]
+                                        }
+                                    }
+                            }
+                        
+                        )
+                    break;
             default:
                 break;
         }
@@ -129,4 +193,26 @@ async function toFields(interaction){
         array.push({name:`Preço Total:`,value:`R$${userDb.cart.total}`,inline:true})
     
     return array;
+}
+function numberVerify(x){
+    if(x == 1 || x == 2 || x == 3 || x == 4 || x == 5){
+        let a = parseInt(x)
+        return a
+    }else{
+        return "ERRO"
+    }
+    
+}
+function toStar(x){
+    let c= ``;
+    if(x>= 6){
+        x = 5
+    }
+    for(let i=1;i<=x;i++)
+    {
+        let start = "⭐";
+        c = c+start;
+        
+    }
+    return c;
 }
