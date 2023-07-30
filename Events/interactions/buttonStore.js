@@ -330,20 +330,13 @@ module.exports =
                             console.error("Erro ao criar o arquivo",e);
                         }
 
-                        const row = new ActionRowBuilder()
-                            .addComponents(new ButtonBuilder()
-                            .setCustomId("qrcodewrited")
-                            .setEmoji("986039365836865566")
-                            .setLabel("Copia e cola")
-                            .setStyle(ButtonStyle.Primary))
-                                         
-                    
+                        
                     const embed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}| Sistema de pagamento`)
                         .setDescription(`${data.body.point_of_interaction.transaction_data.qr_code}`)
                         .setColor("Green")
                         .setFooter({text: "Você tem 10 minutos para efetuar o pagamento"})
-                    interaction.reply({ embeds: [embed],files:[pathQRCode], components: [row],ephemeral: false }).then(msg => 
+                    interaction.reply({ embeds: [embed],files:[pathQRCode],ephemeral: false }).then(msg => 
                             {
                                 let contador = 0;
                                 const tempoTotal = 600000;
