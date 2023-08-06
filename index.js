@@ -14,7 +14,11 @@ const client = new Client({intents:[Guilds,GuildMembers,GuildMessages],Partials:
 
 client.commands = new Collection();
 
+
+
 client.login(TOKEN).then(()=>{
     loadEvents(client);
     loadCommands(client);
 });
+
+

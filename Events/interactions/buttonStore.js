@@ -25,6 +25,12 @@ module.exports =
 
         let guildDB = await model.guild.findOne({guildId:interaction.guild.id})
         let userDb = guildDB.users.find(user=> user.userId === interaction.user.id);
+
+        if(!guildDB.status && customId != "support"){
+            interaction.reply({content:"A loja está fechada. Aguarde algum moderador abri-la.",ephemeral:true})
+            return;
+        }
+        
         if(userDb == null){
             guildDB = await model.guild.findOneAndUpdate(
                 {guildId:interaction.guild.id},
@@ -374,6 +380,14 @@ module.exports =
                                             const addRole = interaction.guild.roles.cache.find(role=>role.id === guildDB.clienteRole);
                                             await membro.roles.add(addRole);
                                             await membro.roles.remove(removeRole);
+
+                                            const boosterRole = guildDB.booster.boosterRole;
+                                            if(boosterRole){
+                                                const membroBooster = membro.roles.cache.some(role=> role.id == boosterRole);
+                                                if(membroBooster){
+                                                    
+                                                }
+                                            }
                                             
                                             const list =[
                                                 {
@@ -416,6 +430,7 @@ module.exports =
                                             list.push(...validarCompras());
                                             const compraAprovada = new EmbedBuilder()
                                                 .setColor('Gold')
+                                                .setThumbnail(interaction.user.avatarURL())
                                                 .setAuthor({name:`${interaction.guild.name}`})
                                                 .setTitle("| Compra Aprovada")
                                                 .setFields(list);
@@ -571,6 +586,7 @@ async function cancelMSG(interaction){
     try{
     const pathQRCode = `./pix/${interaction.user.username}qrcode.png`;
     const pathQRCodeWrited = `./pix/${interaction.user.username}qrcode.txt`;
+    
     fs.unlink(pathQRCodeWrited,(error)=>{
         if(error){
             console.log("Houve um erro ao tentar apagar o arquivo");
@@ -588,7 +604,7 @@ async function cancelMSG(interaction){
         .setAuthor({name:`${interaction.guild.name}`})
         .setTitle("| Sua compra foi cancelada")
         .setDescription("A sua compra foi cancelada")
-        .setFooter({text:"Você é bem-vindo para comprar coma a gente sempre <3"})
+        .setFooter({text:"Você é bem-vindo para comprar com a gente sempre <3"})
         .setColor("Red")
         .setTimestamp(new Date());
     interaction.user.send({content:`<@${interaction.user.id}>`,embeds:[embed]})

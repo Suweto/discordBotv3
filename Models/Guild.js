@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const guildScheme = new mongoose.Schema(
 {
     guildId: String,
+    status: Boolean,
     clienteRole: String,
     feedbackChannel:String,
+    booster: {boosterRole:String,boosterCashBack: Number},
     proofChannel:String,
     welcome:
     {

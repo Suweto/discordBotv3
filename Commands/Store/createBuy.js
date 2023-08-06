@@ -29,7 +29,7 @@ module.exports = {
             .setCustomId(`store,addcart${product.productName}`)
             .setEmoji('🛒')
             .setStyle(ButtonStyle.Success)
-            .setLabel(`Comprar ${toCap(product.productName)}`)
+            .setLabel(`Adicionar no Carrinho ${toCap(product.productName)}`)
 
         const supportButton = new ButtonBuilder()
             .setCustomId('support')
