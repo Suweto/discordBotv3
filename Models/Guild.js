@@ -50,6 +50,7 @@ const guildScheme = new mongoose.Schema(
                 },
                 total: Number,
                 total2: Number,
+                itens: Number,
                 products:
                 [
                     {

@@ -143,6 +143,7 @@ module.exports =
                     await model.guild.updateOne(
                         {guildId:interaction.guild.id,'users.userId':interaction.user.id},
                         {$set:{
+                            'users.$.cart.itens':1,
                             'users.$.cart.channel':channel.id,
                             'users.$.cart.total':product.productPrice,
                             'users.$.cart.products':{productName:product.productName,productPrice:product.productPrice,productQuantity:1},
@@ -162,7 +163,8 @@ module.exports =
                         return;
                     }
                 }
-                    await addTocart(interaction,userDb,product);
+                    const t = (await addTocart(interaction,userDb,product));
+                    if(t) return;
                     const field = await toFields(interaction)
                     const embedCart = new EmbedBuilder()
                     .setTitle("| Área de compra")
@@ -520,8 +522,8 @@ module.exports =
 async function addTocart(interaction,userDb,product){
     const findedProduct =userDb.cart.products.find(productItem=>productItem.productName == product.productName);
     
-    
     if(findedProduct != null){
+        
         await model.guild.updateOne(
             {
               guildId: interaction.guild.id,
@@ -531,7 +533,8 @@ async function addTocart(interaction,userDb,product){
             {
               $set: {
                 'users.$[user].cart.products.$[product].productQuantity': findedProduct.productQuantity+1, // Nova quantidade do produto
-                'users.$[user].cart.total': userDb.cart.total+product.productPrice // Novo total do carrinho do usuário (caso o preço esteja disponível em algum lugar)
+                'users.$[user].cart.total': userDb.cart.total+product.productPrice, // Novo total do carrinho do usuário (caso o preço esteja disponível em algum lugar)
+                
               }
             },
             {
@@ -543,7 +546,10 @@ async function addTocart(interaction,userDb,product){
           );
           
     }else if(findedProduct== null){
-        
+        if(userDb.cart.itens >= 3){
+            interaction.reply({content:`"Você já adicionou o número máximo de tipos de produtos no carrinho. Caso deseje continuar, remova algo do carrinho ou finalize a compra para adicionar esse produto."`,ephemeral:true});
+            return true;
+        }
     
         await model.guild.updateOne(
             {
@@ -559,11 +565,13 @@ async function addTocart(interaction,userDb,product){
                 }
               },
               $set: {
-                'users.$.cart.total': userDb.cart.total + product.productPrice // Substitua pelo novo valor total
+                'users.$.cart.total': userDb.cart.total + product.productPrice, // Substitua pelo novo valor total,
+                'users.$.cart.itens': userDb.itens + 1,
               }
             }
           );
     }
+    return false;
 }
 async function toFields(interaction){
     let array = []
